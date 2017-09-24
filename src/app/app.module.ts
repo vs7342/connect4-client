@@ -10,6 +10,9 @@ import { RoomDetailsComponent } from './room-details/room-details.component';
 import { OnlinePlayersComponent } from './online-players/online-players.component';
 import { MessageComponent } from './message/message.component';
 import { GameBoardComponent } from './game-board/game-board.component';
+import { LobbyComponent } from './lobby/lobby.component';
+import { RoomComponent } from './room/room.component';
+import { GameComponent } from './game/game.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import { GameBoardComponent } from './game-board/game-board.component';
     RoomDetailsComponent,
     OnlinePlayersComponent,
     MessageComponent,
-    GameBoardComponent
+    GameBoardComponent,
+    LobbyComponent,
+    RoomComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,
