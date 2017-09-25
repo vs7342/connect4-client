@@ -10,9 +10,19 @@ import { RoomDetailsComponent } from './room-details/room-details.component';
 import { OnlinePlayersComponent } from './online-players/online-players.component';
 import { MessageComponent } from './message/message.component';
 import { GameBoardComponent } from './game-board/game-board.component';
+import {RouterModule, Routes} from '@angular/router';
 import { LobbyComponent } from './lobby/lobby.component';
 import { RoomComponent } from './room/room.component';
 import { GameComponent } from './game/game.component';
+
+const appRoutes: Routes = [
+  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
+  { path: 'lobby', component: LobbyComponent },
+  { path: 'room', component: RoomComponent },
+  { path: 'game', component: GameComponent },
+];
 
 @NgModule({
   declarations: [
@@ -30,7 +40,8 @@ import { GameComponent } from './game/game.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [],
   bootstrap: [AppComponent]
