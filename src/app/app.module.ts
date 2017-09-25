@@ -14,6 +14,8 @@ import {RouterModule, Routes} from '@angular/router';
 import { LobbyComponent } from './lobby/lobby.component';
 import { RoomComponent } from './room/room.component';
 import { GameComponent } from './game/game.component';
+import {ToastModule} from 'ng2-toastr';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -41,6 +43,8 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
+    BrowserAnimationsModule,
+    ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
   providers: [],
