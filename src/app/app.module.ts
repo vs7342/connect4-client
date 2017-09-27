@@ -15,7 +15,11 @@ import { LobbyComponent } from './lobby/lobby.component';
 import { RoomComponent } from './room/room.component';
 import { GameComponent } from './game/game.component';
 import {ToastModule} from 'ng2-toastr';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpModule} from '@angular/http';
+import {ConstantsService} from './services/constants.service';
+import {NetworkService} from './services/network.service';
+import {DataService} from './services/data.service';
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -43,11 +47,12 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
+    HttpModule,
     BrowserAnimationsModule,
     ToastModule.forRoot(),
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [ConstantsService, NetworkService, DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
