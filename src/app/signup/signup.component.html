@@ -1,3 +1,72 @@
-<p>
-  signup works!
-</p>
+<div class="row">
+  <div class="col-xs-4 col-xs-offset-4">
+
+    <h3 class="component-header">Signup</h3>
+
+    <form (ngSubmit)="onSignupClick()" #signupForm="ngForm">
+
+      <!-- Email -->
+      <div class="form-group custom-form-group">
+        <label for="email">Email ID*</label>
+        <input class="form-control" id="email" type="text" ngModel name="email" email required #email="ngModel"/>
+        <span *ngIf="!email.valid && email.touched" class="help-block danger">Valid email is required.</span>
+      </div>
+
+      <!-- First Name -->
+      <div class="form-group custom-form-group">
+        <label for="fname">First Name*</label>
+        <input class="form-control" id="fname" type="text" ngModel name="fname" required #fname="ngModel" pattern="[a-zA-Z ]*"/>
+        <span *ngIf="!fname.valid && fname.touched" class="help-block danger">Required field. Only alphabets are allowed.</span>
+      </div>
+
+      <!-- Last Name -->
+      <div class="form-group custom-form-group">
+        <label for="lname">Last Name*</label>
+        <input class="form-control" id="lname" type="text" ngModel name="lname" required #lname="ngModel" pattern="[a-zA-Z ]*"/>
+        <span *ngIf="!lname.valid && lname.touched" class="help-block danger">Required field. Only alphabets are allowed.</span>
+      </div>
+
+      <!-- Screen Name -->
+      <div class="form-group custom-form-group">
+        <label for="screenName">Screen Name*</label>
+        <input class="form-control" id="screenName" type="text" ngModel name="screenName" required #screenName="ngModel" pattern="[0-9a-zA-Z ]*"/>
+        <span *ngIf="!screenName.valid && screenName.touched" class="help-block danger">Required field. Only Alphanumerics allowed.</span>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group custom-form-group">
+        <label for="password">Password*</label>
+        <input class="form-control" id="password" type="password" ngModel name="password" required #password="ngModel"/>
+        <span *ngIf="!password.valid && password.touched" class="help-block danger">Password is required.</span>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group custom-form-group">
+        <label for="confirmPassword">Confirm Password*</label>
+        <input class="form-control" id="confirmPassword" type="password" ngModel name="confirmPassword" required #confirmPassword="ngModel"/>
+        <span *ngIf="!confirmPassword.valid && confirmPassword.touched"
+              class="help-block danger">
+          Please confirm the password.
+        </span>
+        <span *ngIf="confirmPassword.valid && password.valid && confirmPassword.value !== password.value"
+              class="help-block danger">
+          Passwords do not match.
+        </span>
+      </div>
+
+      <!-- Sign up and Reset -->
+      <div class="row form-group custom-form-group">
+        <!-- Sign up -->
+        <div class="col-xs-6">
+          <button type="submit" class="btn btn-primary btn-group-justified">Sign Up</button>
+        </div>
+        <!-- Sign Up -->
+        <div class="col-xs-6">
+          <button class="btn btn-primary btn-group-justified" (click)="onResetClick()">Clear</button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+</div>

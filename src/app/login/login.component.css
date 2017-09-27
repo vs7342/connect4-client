@@ -1,0 +1,13 @@
+.component-header {
+  text-align: center;
+  margin: 40px;
+}
+
+.custom-form-group {
+  margin-bottom: 25px;
+  margin-top: 25px;
+}
+
+.help-block.danger {
+  color: red;
+}

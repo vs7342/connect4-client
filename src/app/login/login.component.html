@@ -1,3 +1,37 @@
-<p>
-  login works!
-</p>
+<div class="row">
+  <div class="col-xs-4 col-xs-offset-4">
+
+    <h3 class="component-header">Login</h3>
+
+    <form (ngSubmit)="onLoginClick()" #loginForm="ngForm">
+
+      <!-- Email -->
+      <div class="form-group custom-form-group">
+        <label for="email">Email ID*</label>
+        <input class="form-control" id="email" type="text" ngModel name="email" email required #email="ngModel"/>
+        <span *ngIf="!email.valid && email.touched" class="help-block danger">Valid email is required.</span>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group custom-form-group">
+        <label for="password">Password*</label>
+        <input class="form-control" id="password" type="password" ngModel name="password" required #password="ngModel"/>
+        <span *ngIf="!password.valid && password.touched" class="help-block danger">Password is required.</span>
+      </div>
+
+      <!-- Login and Sign up -->
+      <div class="row form-group custom-form-group">
+        <!-- Login -->
+        <div class="col-xs-6">
+          <button type="submit" class="btn btn-primary btn-group-justified">Login</button>
+        </div>
+        <!-- Sign Up -->
+        <div class="col-xs-6">
+          <button class="btn btn-primary btn-group-justified" routerLink="/signup">Sign Up</button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+</div>
