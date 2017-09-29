@@ -1,3 +1,26 @@
-<app-room-details></app-room-details>
-<app-chat></app-chat>
-<app-online-players></app-online-players>
+<div>
+  <button type="button" class="btn btn-default btn-md back-btn" (click)="onBackToLobbyClick()">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Back to lobby
+  </button>
+
+  <h3 style="text-align: center">Welcome to the room</h3>
+  <h4 style="text-align: center">You can now challenge other players in this room.</h4>
+</div>
+
+<div class="col-xs-12">
+
+  <div class="row lobby-page">
+
+    <div class="col-xs-4 details-section">
+      <app-room-details></app-room-details>
+      <app-online-players [challengeDisabled]="false"></app-online-players>
+    </div>
+
+    <div class="col-xs-8 chat-section">
+      <app-chat></app-chat>
+    </div>
+
+  </div>
+
+</div>
+

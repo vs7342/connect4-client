@@ -1,0 +1,29 @@
+.custom-row {
+  text-align: center;
+  border-bottom: 1px solid rgba(161, 161, 161, 0.2);
+  height: 45px;
+}
+
+.custom-row p {
+  height:100%;
+  width:100%;
+  text-align: center;
+}
+
+.custom-row p:before {
+  content: ' ';
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.title {
+  background-color: rgba(161, 161, 161, 0.2);
+  border-top:1px solid rgba(161, 161, 161, 0.6);
+}
+
+.player-list {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 250px;
+}

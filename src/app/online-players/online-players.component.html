@@ -1,3 +1,20 @@
-<p>
-  online-players works!
-</p>
+<div class="row custom-row title">
+  <p>Players Online</p>
+</div>
+
+<!--Online Player List-->
+<div class="player-list row">
+  <!--If players found-->
+  <div class="row custom-row" *ngFor="let player of onlinePlayers">
+    <p>
+      {{ player.Screen_Name }}
+    </p>
+  </div>
+  <!--If no players are online-->
+  <div class="row custom-row" *ngIf="onlinePlayers.length===0">
+    <p>
+      No players found
+    </p>
+  </div>
+</div>
+

@@ -1,0 +1,22 @@
+.lobby-page {
+  height: 600px;
+  border: 1px solid rgba(161, 161, 161, 0.6);
+}
+
+.details-section {
+  border-right: 1px solid rgba(161, 161, 161, 0.6);
+  height: 100%;
+}
+
+.chat-section {
+  height: 100%;
+}
+
+app-room-details, app-online-players {
+  height: 50%;
+  display: block;
+}
+
+app-chat {
+  height: 100%;
+}

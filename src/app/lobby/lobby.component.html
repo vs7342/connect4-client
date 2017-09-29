@@ -1,2 +1,17 @@
-<app-room-details></app-room-details>
-<app-chat></app-chat>
+<h3 style="text-align: center">Welcome to Connect 4 Lobby</h3>
+<div class="col-xs-12">
+
+  <div class="row lobby-page">
+
+    <div class="col-xs-4 details-section">
+      <app-room-details></app-room-details>
+      <app-online-players [challengeDisabled]="true"></app-online-players>
+    </div>
+
+    <div class="col-xs-8 chat-section">
+      <app-chat></app-chat>
+    </div>
+
+  </div>
+
+</div>

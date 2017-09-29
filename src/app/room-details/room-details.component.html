@@ -1,3 +1,22 @@
-<p>
-  room-details works!
-</p>
+<div class="row custom-row title">
+  <p *ngIf="isLobby">Rooms</p>
+  <p *ngIf="!isLobby">Ongoing Matches</p>
+</div>
+
+<!--Lobby Stuff-->
+<div *ngIf="isLobby">
+  <div class="row custom-row" *ngFor="let room of lobbyDetails" style="cursor: pointer" (click)="navigateToRoom(room.id)">
+    <p>
+      {{ room.Name }}
+    </p>
+  </div>
+</div>
+
+<!--Room Stuff-->
+<div *ngIf="!isLobby">
+  <div class="row custom-row" *ngFor="let singleMatch of ongoingMatches">
+    <p>
+      {{ singleMatch }}
+    </p>
+  </div>
+</div>
