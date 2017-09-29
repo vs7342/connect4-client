@@ -44,4 +44,19 @@ export class UserService {
     };
     return this.networkService.httpPost(url, postBody);
   }
+
+  /**
+   * Returns an Observable based on '/enter/room' PUT request
+   * @param room_id
+   * @param user_id
+   * @returns {Observable}
+   */
+  enterRoom(room_id: number, user_id: number) {
+    const url = this.api_url + 'enter/room';
+    const putBody = {
+      User_id: user_id,
+      Room_id: room_id
+    };
+    return this.networkService.httpPut(url, putBody);
+  }
 }
