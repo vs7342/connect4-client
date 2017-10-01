@@ -1,3 +1,20 @@
-<p>
-  message works!
-</p>
+<div class="row entire-message">
+  <div [ngClass] = "isSentByUser ? 'sent' : 'received'">
+
+    <div class="msg-info">
+      <div class="screen-name">
+        {{isSentByUser ? 'You' : message.From_Screen_Name}}
+      </div>
+    </div>
+
+    <div class="msg-text-time">
+      <div class="msg-text">
+        {{message.Text}}
+      </div>
+      <div class="msg-time">
+        {{message.Message_Time | date:'MMM dd - hh:mm a':'UTC'}}
+      </div>
+    </div>
+
+  </div>
+</div>

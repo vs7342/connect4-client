@@ -1,3 +1,24 @@
-<p>
-  chat works!
-</p>
+<div class="entire-chat row">
+
+  <form></form>
+  <div class="all-messages" #allMessages>
+    <div *ngFor="let message of messages">
+      <app-message [msgAttr]="message" [isSentByUser]="message.From_User_id===currentUserId"></app-message>
+    </div>
+  </div>
+
+  <div class="send-message">
+    <!--<input type="text" placeholder="Enter your message here.." class="col-xs-10">-->
+    <textarea placeholder="Enter your message here.." class="col-xs-10" #sendMsgText></textarea>
+    <button type="button" class="btn btn-default col-xs-2" (click)="onSendClick(sendMsgText)">
+      <ng-template [ngIf]="isGroupChat">
+        Send<span class="glyphicon glyphicon-send" style="padding-left: 10px; font-size: medium"></span>
+      </ng-template>
+      <ng-template #indMsgSend>
+        <span class="glyphicon glyphicon-send" style="font-size: large"></span>
+      </ng-template>
+
+    </button>
+  </div>
+
+</div>

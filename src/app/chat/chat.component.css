@@ -1,0 +1,26 @@
+.entire-chat {
+  height: 100%;
+}
+.all-messages {
+  height: 90%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 25px;
+}
+.send-message {
+  height: 10%;
+  width: 100%;
+  border-top: 1px solid rgba(161, 161, 161, 0.5);
+}
+.send-message textarea{
+  border: none;
+  border-right: 1px solid rgba(161, 161, 161, 0.5);
+  height: 100%;
+  resize: none;
+  padding:15px;
+}
+.send-message button {
+  border: none;
+  height: 100%;
+  font-size: medium;
+}
