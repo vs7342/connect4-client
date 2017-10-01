@@ -7,6 +7,7 @@ import { Message } from '../models/message.model';
 import {DataService} from '../services/data.service';
 import {MessageService} from '../services/message.service';
 import {ToastsManager} from 'ng2-toastr';
+import {ConstantsService} from "../services/constants.service";
 
 @Component({
   selector: 'app-chat',
@@ -23,9 +24,11 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   currentUserId: number;
   currentUserScreenName: string;
   roomId: number;
+  socket: any;
   constructor(
     private dataService: DataService,
     private messageService: MessageService,
+    private constantService: ConstantsService,
     private toaster: ToastsManager,
     vcr: ViewContainerRef
   ) {
@@ -33,6 +36,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    // Initialize socket
+    this.socket = this.constantService.getSocket();
     // Get logged in user details
     const currentUser = this.dataService.getCurrentUser();
     this.currentUserId = currentUser.id;
@@ -69,6 +74,21 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     }else {
       // Access the individual chat service and initialize messages array
     }
+
+    /**
+     * Socket handler to receive messages in that room
+     */
+    this.socket.on('client-rcv-room-msg', data => {
+      // push the message to messages array
+      this.messages.push(new Message(
+        data.message_id,
+        data.To_id,
+        data.Text,
+        data.Message_Time,
+        data.From_User_id,
+        data.Screen_Name
+      ));
+    });
   }
 
   onSendClick(txtArea: HTMLTextAreaElement) {
@@ -95,6 +115,18 @@ export class ChatComponent implements OnInit, AfterViewChecked {
             ));
             // Reset text area
             txtArea.value = '';
+            // Send message to socket
+            this.socket.emit('send-room-message', {
+                // This is needed by the socket to identify the room number
+                room_id: this.roomId,
+                // Details to construct Message object
+                message_id: postedMsg.id,
+                To_id: postedMsg.To_id,
+                Text: postedMsg.Text,
+                Message_Time: postedMsg.Message_Time,
+                From_User_id: postedMsg.From_User_id,
+                Screen_Name: this.currentUserScreenName
+            });
           }else {
             // Display error toast
             this.toaster.error(data.message, 'Error sending message');

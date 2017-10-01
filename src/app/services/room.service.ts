@@ -29,4 +29,15 @@ export class RoomService {
     // Returning the api call observable
     return this.networkService.httpGet(url);
   }
+  /**
+   * Returns an Observable based on 'socket/clients?room_id={user_id}' GET request
+   * @param room_id
+   * @returns {Observable}
+   */
+  getSocketRoomDetails(room_id: number) {
+    // Constructing the URL
+    const url = this.api_url + 'socket/clients?room_id=' + room_id;
+    // Returning the api call observable
+    return this.networkService.httpGet(url);
+  }
 }
