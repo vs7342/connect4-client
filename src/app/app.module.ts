@@ -20,6 +20,8 @@ import {HttpModule} from '@angular/http';
 import {ConstantsService} from './services/constants.service';
 import {NetworkService} from './services/network.service';
 import {DataService} from './services/data.service';
+import { OutgoingChallengeComponent } from './modals/outgoing-challenge/outgoing-challenge.component';
+import { IncomingChallengeComponent } from './modals/incoming-challenge/incoming-challenge.component';
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -42,7 +44,9 @@ const appRoutes: Routes = [
     GameBoardComponent,
     LobbyComponent,
     RoomComponent,
-    GameComponent
+    GameComponent,
+    OutgoingChallengeComponent,
+    IncomingChallengeComponent
   ],
   imports: [
     BrowserModule,

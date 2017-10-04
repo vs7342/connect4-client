@@ -1,0 +1,36 @@
+.modal-background{
+  background: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  display: block;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+.modal-container{
+  background: white;
+  position: fixed;
+  display: block;
+  top:25%;
+  right: 35%;
+  width: 40%;
+  border-radius: 5px;
+  padding: 30px;
+  z-index: 100;
+  text-align: center;
+}
+
+.fadeInDown {
+  animation-name: fadeDown;
+  animation-duration: .2s;
+}
+
+.fadeIn{
+  animation-name: fadeIn;
+  animation-duration: .2s;
+}
+
+.modal-header, .modal-body, .modal-footer {
+  padding: 20px;
+}

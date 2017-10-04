@@ -6,7 +6,7 @@
 <div class="player-list row">
   <!--If players found-->
   <div class="row custom-row" *ngFor="let player of onlinePlayers">
-    <p>
+    <p (click)="openOutgoingModal(player.id, player.Screen_Name)">
       {{ player.Screen_Name }}
     </p>
   </div>
@@ -16,5 +16,27 @@
       No players found
     </p>
   </div>
+</div>
+
+<!--Modals for outgoing and incoming challenges-->
+<div class="row">
+
+  <app-outgoing-challenge
+    *ngIf="isOutgoingChlgDisplayed"
+    [challengee]="challengee"
+    [seconds_remaining]="outgoingSecondsRemaining"
+    [challengeId]="outgoingChallengeId"
+    (cancel)="cancelChallenge()">
+  </app-outgoing-challenge>
+
+  <app-incoming-challenge
+    *ngIf="isIncomingChlgDisplayed"
+    [challengeId]="incomingChallengeId"
+    [challenger]="challenger"
+    [seconds_remaining] = "incomingSecondsRemaining"
+    (close)="onIncomingChallengeResponse($event)"
+  >
+  </app-incoming-challenge>
+
 </div>
 

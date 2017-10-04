@@ -1,0 +1,18 @@
+<div class="modal-background fadeIn"></div>
+<div class="modal-container fadeInDown">
+  <h3 class="modal-header">
+    {{challengee.Screen_Name}} has been challenged!
+  </h3>
+  <div class="modal-body">
+    <div class="row">
+      Kindly wait while {{challengee.Screen_Name}} accepts the challenge..
+      <br><br>
+      {{seconds_remaining}} sec(s) left..
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="row">
+      <button class="btn btn-danger" (click)="cancelChlg()">Cancel Challenge</button>
+    </div>
+  </div>
+</div>
