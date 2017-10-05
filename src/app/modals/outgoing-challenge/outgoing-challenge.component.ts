@@ -13,9 +13,7 @@ export class OutgoingChallengeComponent implements OnInit {
   @Input('seconds_remaining') seconds_remaining = 2;
   @Output('cancel') cancel = new EventEmitter<null>();
 
-  constructor(private gameService: GameService, private toaster: ToastsManager, vcr: ViewContainerRef) {
-    this.toaster.setRootViewContainerRef(vcr);
-  }
+  constructor(private gameService: GameService, private toaster: ToastsManager) {}
 
   ngOnInit() {}
 

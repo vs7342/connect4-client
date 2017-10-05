@@ -12,9 +12,7 @@ export class IncomingChallengeComponent implements OnInit {
   @Input('challengeId') challengeId: number;
   @Input('seconds_remaining') seconds_remaining: number;
   @Output('close') close = new EventEmitter<number>();
-  constructor(private gameService: GameService, private toaster: ToastsManager, vcr: ViewContainerRef) {
-    this.toaster.setRootViewContainerRef(vcr);
-  }
+  constructor(private gameService: GameService, private toaster: ToastsManager) {}
 
   ngOnInit() {}
 

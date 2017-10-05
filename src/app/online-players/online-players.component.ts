@@ -97,8 +97,10 @@ export class OnlinePlayersComponent implements OnInit {
       }
     });
 
-    // Keep looking for incoming challenges
-    this.checkIncomingChallengesHeartbeat();
+    // Keep looking for incoming challenges only in room (not in lobby)
+    if (this.currentUser.Room_id !== 1) {
+      this.checkIncomingChallengesHeartbeat();
+    }
   }
 
   openOutgoingModal(user_id: number, user_screen_name: string) {
@@ -140,14 +142,22 @@ export class OnlinePlayersComponent implements OnInit {
 
   /*Heartbeats to check for any incoming challenges or the challenge which has been created(sent)*/
   checkIncomingChallengesHeartbeat() {
+    // No need to check this in lobby
+    if (this.currentUser.Room_id === 1) {
+      return;
+    }
     // Check for incoming challenges and display the modal if any
     this.gameService.checkIncomingChallenge(this.currentUser.id).subscribe(
       (data: any[]) => {
+        // No need to check this in lobby
+        if (this.currentUser.Room_id === 1) {
+          return;
+        }
         if (data.length > 0) {
           // Display the incoming challenge modal after setting appropriate details
           this.challenger = {
             id: data[0].User.id,
-            Screen_Name: data[0].User.id
+            Screen_Name: data[0].User.Screen_Name
           };
           this.incomingChallengeId = data[0].id;
           this.incomingSecondsRemaining = 30;
@@ -220,28 +230,41 @@ export class OnlinePlayersComponent implements OnInit {
 
   // Checks for 2 of 4 conditions of single incoming challenge  - Canceled/Expired
   checkIncomingChallengeStatusHeartBeat(challenge_id: number) {
+    // No need to check this in lobby
+    if (this.currentUser.Room_id === 1) {
+      return;
+    }
     // Fetch the challenge first
     this.gameService.checkOngoingChallenge(challenge_id).subscribe(
       (challenge => {
+        // No need to check this in lobby
+        if (this.currentUser.Room_id === 1) {
+          return;
+        }
         if (challenge.id) {
           // Challenge exists.. now you can check various conditions
           // 1. Accept/Decline
+          // (This is actually not needed since accept/decline will happen client side and player will be navigated automatically anyways)
           if (challenge['Accepted'] === true || challenge['Accepted'] === false) {
             // Stop the heartbeat.. we don't need it anymore
             this.isIncomingChlgDisplayed = false;
             return;
           }
           // 3. Cancelled
-          if (challenge['Cancelled'] === true) {
+          if (challenge['Cancelled'] === true && this.isIncomingChlgDisplayed) {
             this.isIncomingChlgDisplayed = false;
-            this.toaster.info('Challenger has cancelled their challenge.');
+            this.toaster.info('Challenge has been cancelled.');
+            // Again start listening to any incoming challenges
+            setTimeout( () => { this.checkIncomingChallengesHeartbeat(); }, 2000);
             return;
           }
           // 4. Expired
-          if (challenge['Expired'] === true) {
+          if (challenge['Expired'] === true && this.isIncomingChlgDisplayed) {
             this.isIncomingChlgDisplayed = false;
             // TODO: When the counter thing is handled client side, toaster info display is not needed
             this.toaster.info('Challenge has been expired');
+            // Again start listening to any incoming challenges
+            setTimeout( () => { this.checkIncomingChallengesHeartbeat(); }, 2000);
             return;
           }
 
@@ -278,6 +301,8 @@ export class OnlinePlayersComponent implements OnInit {
       // Close the modal
       this.isIncomingChlgDisplayed = false;
       // TODO: Navigate to '/game' yo!
+      // TODO: Remove this checkIncomingChallenges since it wont be needed anymore
+      this.checkIncomingChallengesHeartbeat();
       this.toaster.success('You have accepted the challenge.. Initiating CONNECT 4..');
     } else {
       console.log('Incoming chlng declined');
@@ -285,6 +310,8 @@ export class OnlinePlayersComponent implements OnInit {
       this.isIncomingChlgDisplayed = false;
       // Close the modal
       this.toaster.info('Challenge declined');
+      // Since the challenge was declined.. user is idle and can be challenged
+      this.checkIncomingChallengesHeartbeat();
     }
   }
 }
