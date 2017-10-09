@@ -34,8 +34,8 @@ export class RoomComponent implements OnInit {
     this.userService.enterRoom(1, this.currentUser.id).subscribe(
       (data => {
         if (data.success) {
-          // First update the user object data
-          this.currentUser.Room_id = 1;
+          // Update the roomId in the local storage
+          this.dataService.setCurrentUserRoom(1);
           // Navigate back to lobby
           this.router.navigate(['/lobby']);
         } else {

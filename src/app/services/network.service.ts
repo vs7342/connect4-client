@@ -1,12 +1,12 @@
+import {DataService} from './data.service';
 import {Injectable} from '@angular/core';
 import {Http, Headers, Response} from '@angular/http';
 import 'rxjs/Rx';
 import {Observable} from 'rxjs/Observable';
-import {ConstantsService} from './constants.service';
 
 @Injectable()
 export class NetworkService {
-  constructor(private http: Http, private constantsService: ConstantsService) { }
+  constructor(private http: Http, private dataService: DataService) { }
 
   /**
    * Generic method to perform http GET requests.
@@ -14,7 +14,7 @@ export class NetworkService {
    * @returns {Observable}
    */
   httpGet(url: string) {
-    return this.http.get(url, {headers: this.getHeaders('dummy')})
+    return this.http.get(url, {headers: this.getHeaders()})
       .map((response: Response) => {
         return response.json();
       })
@@ -37,7 +37,7 @@ export class NetworkService {
    * @returns {Observable}
    */
   httpPost(url: string, postBody: any) {
-    return this.http.post(url, postBody, {headers: this.getHeaders('dummy')})
+    return this.http.post(url, postBody, {headers: this.getHeaders()})
       .map((response: Response) => {
         return response.json();
       })
@@ -60,7 +60,7 @@ export class NetworkService {
    * @returns {Observable}
    */
   httpPut(url: string, putBody: any) {
-    return this.http.put(url, putBody, {headers: this.getHeaders('dummy')})
+    return this.http.put(url, putBody, {headers: this.getHeaders()})
       .map((response: Response) => {
         return response.json();
       })
@@ -78,13 +78,11 @@ export class NetworkService {
 
   /**
    * Fetches the header which should be sent along with the request
-   * Creates a header with an api-key (generic key to access api) and access-token (which is specific to user)
-   * @param token
+   * Creates a header with an api-key containing a token
    */
-  getHeaders(token: string) {
+  getHeaders() {
     return new Headers({
-      'api-key': this.constantsService.getApiKey(),
-      'access-token': token
+      'api-key': this.dataService.getToken()
     });
   }
 }

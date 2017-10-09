@@ -46,7 +46,9 @@ export class SignupComponent implements OnInit {
         (data => {
           if (data.success) {
             // Save User data
-            this.dataService.setCurrentUser(data.user);
+            this.dataService.setToken(data.token);
+            // Set user room id in the local storage to '1' (lobby)
+            this.dataService.setCurrentUserRoom(1);
             // Navigate to Lobby
             this.route.navigate(['/lobby']);
           } else {

@@ -1,18 +1,70 @@
 import {User} from '../models/user.model';
+import deleteProperty = Reflect.deleteProperty;
 
 export class DataService {
-  private token: string;
-  private currentUser: User;
+
+  verifyToken() {
+    // Fetch the token from local storage
+    const token = localStorage.getItem('token');
+
+    // If the token is present, then proceed with validation
+    if (token) {
+      // Now check if the token is valid - 'exp' value
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      // This will return true if token is not expired.. else it will
+      return payload.exp > Date.now() / 1000;
+    } else {
+      // Return false since token variable was not found in the local storage
+      return false;
+    }
+  }
+
   setToken(token: string) {
-    this.token = token;
+    // Set the 'token' variable in the local storage
+    localStorage.setItem('token', token);
   }
+
   getToken() {
-    return this.token;
+    // Get the 'token' variable from the local storage
+    const token = localStorage.getItem('token');
+    // Check if a valid token is present.. else return blank string
+    if (token && this.verifyToken()) {
+      return token;
+    }else {
+      return '';
+    }
   }
-  setCurrentUser(currentUser: User) {
-    this.currentUser = currentUser;
-  }
+
   getCurrentUser() {
-    return this.currentUser;
+    let user: User;
+    // First get the token
+    const token = this.getToken();
+    if (token) {
+      // Since token is valid, extract payload info from it
+      let payload = JSON.parse(atob(token.split('.')[1]));
+      // Delete the exp and iat attributes from the payload
+      Reflect.deleteProperty(payload, 'exp');
+      Reflect.deleteProperty(payload, 'iat');
+
+      // Cast it into a 'User' type object
+      user = payload;
+
+      // If the roomId is stored in the localStorage, then assign the Room_Id of user to that value
+      if (this.getCurrentUserRoom()) {
+        user.Room_id = +this.getCurrentUserRoom();
+      }
+
+      return user;
+    } else {
+      // I guess just log out.. navigate to home page
+    }
+  }
+
+  setCurrentUserRoom(roomId: number) {
+    localStorage.setItem('roomId', roomId.toString());
+  }
+
+  getCurrentUserRoom() {
+    return localStorage.getItem('roomId');
   }
 }
