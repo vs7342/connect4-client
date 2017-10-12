@@ -11,7 +11,8 @@
     <!--<input type="text" placeholder="Enter your message here.." class="col-xs-10">-->
     <textarea placeholder="Enter your message here.." class="col-xs-10" #sendMsgText></textarea>
     <button type="button" class="btn btn-default col-xs-2" (click)="onSendClick(sendMsgText)">
-      <ng-template [ngIf]="isGroupChat">
+      <div *ngIf="isGroupChat; then grpMsgSend else indMsgSend"></div>
+      <ng-template #grpMsgSend>
         Send<span class="glyphicon glyphicon-send" style="padding-left: 10px; font-size: medium"></span>
       </ng-template>
       <ng-template #indMsgSend>
