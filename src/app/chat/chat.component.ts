@@ -116,7 +116,22 @@ export class ChatComponent implements OnInit, AfterViewChecked {
         data.Screen_Name
       ));
     });
-    // TODO: Receive individual socket message handler
+    /**
+     * Socket handler to receive individual messages from opponent
+     */
+    this.socket.on('client-rcv-ind-msg', data => {
+      // Push message to array only if the 'To_id' is same as currentUserId
+      if (data.To_id === this.currentUserId) {
+        this.messages.push(new Message(
+          data.message_id,
+          data.To_id,
+          data.Text,
+          data.Message_Time,
+          data.From_User_id,
+          data.Screen_Name
+        ));
+      }
+    });
   }
 
   onSendClick(txtArea: HTMLTextAreaElement) {
@@ -185,7 +200,16 @@ export class ChatComponent implements OnInit, AfterViewChecked {
               ));
               // Reset text area
               txtArea.value = '';
-              // TODO: Send message to socket
+              // Send message to socket
+              this.socket.emit('send-ind-message', {
+                // Details to construct Message object
+                message_id: postedMsg.id,
+                To_id: postedMsg.To_id,
+                Text: postedMsg.Text,
+                Message_Time: postedMsg.Message_Time,
+                From_User_id: postedMsg.From_User_id,
+                Screen_Name: this.currentUserScreenName
+              });
             }else {
               // Display error toast
               this.toaster.error(data.message, 'Error sending message to opponent');
