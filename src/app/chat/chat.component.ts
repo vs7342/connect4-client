@@ -24,6 +24,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   currentUserId: number;
   currentUserScreenName: string;
   roomId: number;
+  opponentUserId: number;
   socket: any;
   constructor(
     private dataService: DataService,
@@ -73,6 +74,32 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       );
     }else {
       // Access the individual chat service and initialize messages array
+      this.opponentUserId = +this.dataService.getOpponentUserId();
+      this.messageService.getIndividualConversation(this.opponentUserId, this.currentUserId).subscribe(
+        (data => {
+          if (data.success) {
+            const dataMessages = data.messages;
+            for (let i = 0; i < dataMessages.length; i++) {
+              const singleMsg = dataMessages[i];
+              const singleMsgToPush = new Message(singleMsg.id,
+                -1,
+                singleMsg.Text,
+                singleMsg.Message_Time,
+                singleMsg.From_User_id,
+                singleMsg.User.Screen_Name);
+              this.messages.push(singleMsgToPush);
+            }
+            console.log(this.messages);
+          } else {
+            // Display an error message
+            this.toaster.error(data.message, 'Error fetching individual conversation.');
+          }
+        }),
+        (error => {
+          // Display an error message
+          this.toaster.error(error, 'Error fetching individual conversation.');
+        })
+      );
     }
 
     /**
@@ -89,6 +116,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
         data.Screen_Name
       ));
     });
+    // TODO: Receive individual socket message handler
   }
 
   onSendClick(txtArea: HTMLTextAreaElement) {
@@ -99,24 +127,27 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       if (msgValue.length <= 0) {
         return this.toaster.error('Kindly enter message text', 'Validation Error');
       }
-      // Access send method of message service
-      this.messageService.sendGroupMessages(this.roomId, this.currentUserId, msgValue).subscribe(
-        (data => {
-          if (data.success) {
-            // Update messages array of the component
-            const postedMsg = data.message;
-            this.messages.push(new Message(
-              postedMsg.id,
-              postedMsg.To_id,
-              postedMsg.Text,
-              postedMsg.Message_Time,
-              postedMsg.From_User_id,
-              this.currentUserScreenName
-            ));
-            // Reset text area
-            txtArea.value = '';
-            // Send message to socket
-            this.socket.emit('send-room-message', {
+      // Check for individual or group messages
+      if (this.isGroupChat) {
+        // Send Group Message
+        // Access send method of message service
+        this.messageService.sendGroupMessages(this.roomId, this.currentUserId, msgValue).subscribe(
+          (data => {
+            if (data.success) {
+              // Update messages array of the component
+              const postedMsg = data.message;
+              this.messages.push(new Message(
+                postedMsg.id,
+                postedMsg.To_id,
+                postedMsg.Text,
+                postedMsg.Message_Time,
+                postedMsg.From_User_id,
+                this.currentUserScreenName
+              ));
+              // Reset text area
+              txtArea.value = '';
+              // Send message to socket
+              this.socket.emit('send-room-message', {
                 // This is needed by the socket to identify the room number
                 room_id: this.roomId,
                 // Details to construct Message object
@@ -126,17 +157,46 @@ export class ChatComponent implements OnInit, AfterViewChecked {
                 Message_Time: postedMsg.Message_Time,
                 From_User_id: postedMsg.From_User_id,
                 Screen_Name: this.currentUserScreenName
-            });
-          }else {
+              });
+            }else {
+              // Display error toast
+              this.toaster.error(data.message, 'Error sending message');
+            }
+          }),
+          (error => {
             // Display error toast
-            this.toaster.error(data.message, 'Error sending message');
-          }
-        }),
-        (error => {
-          // Display error toast
-          this.toaster.error(error, 'Error sending message');
-        })
-      );
+            this.toaster.error(error, 'Error sending message');
+          })
+        );
+      } else {
+        // Send individual message
+        this.messageService.sendIndividualMessage(this.currentUserId, this.opponentUserId, msgValue).subscribe(
+          (data => {
+            if (data.success) {
+              // Update messages array of the component
+              const postedMsg = data.message;
+              this.messages.push(new Message(
+                postedMsg.id,
+                postedMsg.To_id,
+                postedMsg.Text,
+                postedMsg.Message_Time,
+                postedMsg.From_User_id,
+                this.currentUserScreenName
+              ));
+              // Reset text area
+              txtArea.value = '';
+              // TODO: Send message to socket
+            }else {
+              // Display error toast
+              this.toaster.error(data.message, 'Error sending message to opponent');
+            }
+          }),
+          (error => {
+            // Display error toast
+            this.toaster.error(error, 'Error sending message to opponent');
+          })
+        );
+      }
     }else {
       this.toaster.error('Msg text too long', 'Validation Error');
     }

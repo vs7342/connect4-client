@@ -5,6 +5,7 @@ import {RoomService} from "../services/room.service";
 import {ToastsManager} from "ng2-toastr";
 import {ConstantsService} from "../services/constants.service";
 import {GameService} from "../services/game.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-online-players',
@@ -33,6 +34,7 @@ export class OnlinePlayersComponent implements OnInit {
     private dataService: DataService,
     private roomService: RoomService,
     private gameService: GameService,
+    private router: Router,
     private constantService: ConstantsService,
     private toaster: ToastsManager,
     vcr: ViewContainerRef) {
@@ -143,14 +145,14 @@ export class OnlinePlayersComponent implements OnInit {
   /*Heartbeats to check for any incoming challenges or the challenge which has been created(sent)*/
   checkIncomingChallengesHeartbeat() {
     // No need to check this in lobby
-    if (this.currentUser.Room_id === 1) {
+    if (this.currentUser.Room_id === 1 || this.outgoingChallengeId) {
       return;
     }
     // Check for incoming challenges and display the modal if any
     this.gameService.checkIncomingChallenge(this.currentUser.id).subscribe(
       (data: any[]) => {
         // No need to check this in lobby
-        if (this.currentUser.Room_id === 1) {
+        if (this.currentUser.Room_id === 1 || this.outgoingChallengeId) {
           return;
         }
         if (data.length > 0) {
@@ -188,19 +190,30 @@ export class OnlinePlayersComponent implements OnInit {
           // 1. Accept
           if (challenge['Accepted'] === true) {
             this.isOutgoingChlgDisplayed = false;
-            // TODO: Navigate to '/game' yo!
+            // First save the challenge_id and opponent_user_id for messaging purpose
+            this.dataService.setCurrentChallenge(this.outgoingChallengeId);
+            this.dataService.setOpponentUserId(this.challengee.id);
+            // Unset outgoing challengeId
+            this.outgoingChallengeId = 0;
+            // Show the message
             this.toaster.success('Opponent has accepted the challenge.. Initiating CONNECT 4..');
+            // Now navigate to Game component with 3 second timeout.. so that this message is displayed and game is initialized
+            setTimeout(() => { this.router.navigate(['/game']) ; }, 3000);
             return;
           }
           // 2. Decline
           if (challenge['Accepted'] === false) {
             this.isOutgoingChlgDisplayed = false;
             this.toaster.info('Opponent has declined the challenge');
+            // Unset outgoing challengeId
+            this.outgoingChallengeId = 0;
             return;
           }
           // 3. Cancelled
           if (challenge['Cancelled'] === true) {
             this.isOutgoingChlgDisplayed = false;
+            // Unset outgoing challengeId
+            this.outgoingChallengeId = 0;
             // No need to do anything since message display has been handled earlier
             // this.toaster.info('Challenge cancelled');
             return;
@@ -210,6 +223,8 @@ export class OnlinePlayersComponent implements OnInit {
             this.isOutgoingChlgDisplayed = false;
             // TODO: When the counter thing is handled client side, toaster info display is not needed
             this.toaster.info('Challenge Expired');
+            // Unset outgoing challengeId
+            this.outgoingChallengeId = 0;
             return;
           }
 
@@ -300,10 +315,13 @@ export class OnlinePlayersComponent implements OnInit {
       console.log('Incoming chlng accepted');
       // Close the modal
       this.isIncomingChlgDisplayed = false;
-      // TODO: Navigate to '/game' yo!
-      // TODO: Remove this checkIncomingChallenges since it wont be needed anymore
-      this.checkIncomingChallengesHeartbeat();
+      // First save the challenge_id and opponent_user_id for messaging purpose
+      this.dataService.setCurrentChallenge(this.incomingChallengeId);
+      this.dataService.setOpponentUserId(this.challenger.id);
+      // Show the message
       this.toaster.success('You have accepted the challenge.. Initiating CONNECT 4..');
+      // Now navigate to Game component with 3 second timeout.. so that this message is displayed and game is initialized
+      setTimeout(() => { this.router.navigate(['/game']) ; }, 3000);
     } else {
       console.log('Incoming chlng declined');
       // Display a message saying that your challenge has been declined..

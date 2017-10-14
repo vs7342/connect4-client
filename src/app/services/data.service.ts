@@ -67,4 +67,28 @@ export class DataService {
   getCurrentUserRoom() {
     return localStorage.getItem('roomId');
   }
+
+  setCurrentChallenge(challengeId: number) {
+    localStorage.setItem('challengeId', challengeId.toString());
+  }
+
+  getCurrentChallenge() {
+    return localStorage.getItem('challengeId');
+  }
+
+  setOpponentUserId(opponentUserId: number) {
+    localStorage.setItem('opponentUserId', opponentUserId.toString());
+  }
+
+  getOpponentUserId() {
+    return localStorage.getItem('opponentUserId');
+  }
+
+  setGameId(gameId: number) {
+    localStorage.setItem('gameId', gameId.toString());
+  }
+
+  getGameId() {
+    return localStorage.getItem('gameId');
+  }
 }

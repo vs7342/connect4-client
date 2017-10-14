@@ -28,4 +28,29 @@ export class MessageService {
     };
     return this.networkService.httpPost(this.api_url + 'message/room', postBody);
   }
+  /**
+   * Returns an Observable based on 'message/individual/conversation?user_id_1={user_id_1}&user_id_2={user_id_2}' GET request
+   * @param user_id_1
+   * @param user_id_2
+   * @returns {Observable}
+   */
+  getIndividualConversation(user_id_1: number, user_id_2: number) {
+    return this.networkService.httpGet(this.api_url + 'message/individual/conversation?user_id_1=' + user_id_1 + '&user_id_2=' + user_id_2);
+  }
+
+  /**
+   * Returns an Observable based on 'message/individual' POST request
+   * @param from_user_id
+   * @param to_user_id
+   * @param msg_text
+   * @returns {Observable}
+   */
+  sendIndividualMessage(from_user_id: number, to_user_id: number, msg_text: string) {
+    const postBody = {
+      Text: msg_text,
+      From_User_id: from_user_id,
+      To_id: to_user_id
+    };
+    return this.networkService.httpPost(this.api_url + 'message/individual', postBody);
+  }
 }
