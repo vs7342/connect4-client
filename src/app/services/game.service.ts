@@ -82,4 +82,17 @@ export class GameService {
     };
     return this.networkService.httpPut(this.api_url + 'challenge/cancel', putBody);
   }
+
+  /**
+   * Basically initializes the game in the DB and returns game id and player objects
+   * Returns an Observable based on '/game' POST request
+   * @param challenge_id
+   * @returns {Observable}
+   */
+  initGame(challenge_id) {
+    const postBody = {
+      Challenge_id: challenge_id
+    };
+    return this.networkService.httpPost(this.api_url + 'game', postBody);
+  }
 }

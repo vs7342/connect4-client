@@ -144,15 +144,15 @@ export class OnlinePlayersComponent implements OnInit {
 
   /*Heartbeats to check for any incoming challenges or the challenge which has been created(sent)*/
   checkIncomingChallengesHeartbeat() {
-    // No need to check this in lobby
-    if (this.currentUser.Room_id === 1 || this.outgoingChallengeId) {
+    // No need to check this in lobby or while in game
+    if (this.currentUser.Room_id === 1 || this.dataService.getGameId()) {
       return;
     }
     // Check for incoming challenges and display the modal if any
     this.gameService.checkIncomingChallenge(this.currentUser.id).subscribe(
       (data: any[]) => {
-        // No need to check this in lobby
-        if (this.currentUser.Room_id === 1 || this.outgoingChallengeId) {
+        // No need to check this in lobby or while in game
+        if (this.currentUser.Room_id === 1 || this.dataService.getGameId()) {
           return;
         }
         if (data.length > 0) {
@@ -193,12 +193,14 @@ export class OnlinePlayersComponent implements OnInit {
             // First save the challenge_id and opponent_user_id for messaging purpose
             this.dataService.setCurrentChallenge(this.outgoingChallengeId);
             this.dataService.setOpponentUserId(this.challengee.id);
+            // Save challengeId in local variable to use it to initialize game
+            const tempOutgoingChallengeId = this.outgoingChallengeId;
             // Unset outgoing challengeId
             this.outgoingChallengeId = 0;
             // Show the message
             this.toaster.success('Opponent has accepted the challenge.. Initiating CONNECT 4..');
-            // Now navigate to Game component with 3 second timeout.. so that this message is displayed and game is initialized
-            setTimeout(() => { this.router.navigate(['/game']) ; }, 3000);
+            // Initialize the game after 2 seconds.. while the above message is shown..
+            setTimeout(() => { this.initializeGame(tempOutgoingChallengeId) ; }, 4000);
             return;
           }
           // 2. Decline
@@ -320,8 +322,8 @@ export class OnlinePlayersComponent implements OnInit {
       this.dataService.setOpponentUserId(this.challenger.id);
       // Show the message
       this.toaster.success('You have accepted the challenge.. Initiating CONNECT 4..');
-      // Now navigate to Game component with 3 second timeout.. so that this message is displayed and game is initialized
-      setTimeout(() => { this.router.navigate(['/game']) ; }, 3000);
+      // Initialize the game after 2 seconds.. while the above message is shown..
+      setTimeout(() => { this.initializeGame(this.incomingChallengeId) ; }, 2000);
     } else {
       console.log('Incoming chlng declined');
       // Display a message saying that your challenge has been declined..
@@ -331,5 +333,28 @@ export class OnlinePlayersComponent implements OnInit {
       // Since the challenge was declined.. user is idle and can be challenged
       this.checkIncomingChallengesHeartbeat();
     }
+  }
+
+  initializeGame(challengeId: number) {
+    // Call initGame method of game service
+    this.gameService.initGame(challengeId).subscribe(
+      (data => {
+        // Save game id in the local storage
+        this.dataService.setGameId(data.Game_id);
+        // Save Players(opponent and self) in local storage
+        if (data['Players'][0].User_id === this.currentUser.id) {
+          this.dataService.setPlayer('self', data['Players'][0]);
+          this.dataService.setPlayer('opponent', data['Players'][1]);
+        } else {
+          this.dataService.setPlayer('self', data['Players'][1]);
+          this.dataService.setPlayer('opponent', data['Players'][0]);
+        }
+        // Route to game component
+        this.router.navigate(['/game']);
+      }),
+      (error => {
+        this.toaster.error(error, 'Error occurred while initiating the game..');
+      })
+    );
   }
 }

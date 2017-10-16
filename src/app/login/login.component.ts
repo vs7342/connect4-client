@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    localStorage.clear();
   }
 
   // This will check for login credentials with the API

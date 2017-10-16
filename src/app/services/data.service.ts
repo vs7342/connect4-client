@@ -1,5 +1,6 @@
 import {User} from '../models/user.model';
 import deleteProperty = Reflect.deleteProperty;
+import {Player} from "../models/player.model";
 
 export class DataService {
 
@@ -90,5 +91,13 @@ export class DataService {
 
   getGameId() {
     return localStorage.getItem('gameId');
+  }
+
+  setPlayer(player_type: string, player_obj: Player) {
+    localStorage.setItem('player_' + player_type, JSON.stringify(player_obj));
+  }
+
+  getPlayer(player_type: string): Player {
+    return JSON.parse(localStorage.getItem('player_' + player_type));
   }
 }
