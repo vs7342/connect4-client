@@ -1,0 +1,19 @@
+.pieces{
+  height: 302px;
+  width: 352px;
+  position: relative;
+  border: 1px solid rgba(161, 161, 161, 0.7);
+  margin: 0 auto;
+  margin-top: 100px;
+}
+
+.pieces-column{
+  height: 100%;
+  width: 14.285714%;
+  float: left;
+  border: 1px solid rgba(161, 161, 161, 0.2);
+}
+
+.pieces-column:hover{
+  background-color: aliceblue;
+}

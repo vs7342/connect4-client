@@ -1,3 +1,26 @@
-<p>
-  game-board works!
-</p>
+<div class="game-board">
+  <div class="pieces">
+
+    <!--Actual piece array-->
+    <app-piece
+      *ngFor="let singlePiece of pieces"
+      [pieceColor]="singlePiece.Player.Color"
+      [position_x]="singlePiece.Position_X"
+      [position_y]="singlePiece.Position_Y"
+      (columnClicked)="playTurn($event)">
+    </app-piece>
+
+    <!--Columns over which player has to click-->
+    <div class="pieces-column" (click)="playTurn(0)"></div>
+    <div class="pieces-column" (click)="playTurn(1)"></div>
+    <div class="pieces-column" (click)="playTurn(2)"></div>
+    <div class="pieces-column" (click)="playTurn(3)"></div>
+    <div class="pieces-column" (click)="playTurn(4)"></div>
+    <div class="pieces-column" (click)="playTurn(5)"></div>
+    <div class="pieces-column" (click)="playTurn(6)"></div>
+
+  </div>
+  <div class="game-messages">
+
+  </div>
+</div>
