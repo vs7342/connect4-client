@@ -86,7 +86,11 @@ export class DataService {
   }
 
   setGameId(gameId: number) {
-    localStorage.setItem('gameId', gameId.toString());
+    if (gameId === -1) {
+      localStorage.setItem('gameId', '');
+    }else {
+      localStorage.setItem('gameId', gameId.toString());
+    }
   }
 
   getGameId() {

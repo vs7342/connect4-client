@@ -95,4 +95,36 @@ export class GameService {
     };
     return this.networkService.httpPost(this.api_url + 'game', postBody);
   }
+
+  /**
+   * Returns an Observable based on '/piece' POST request
+   * @param position_x
+   * @param player_id
+   * @param game_id
+   * @param room_id
+   * @param user_id
+   * @returns {Observable}
+   */
+  postPiece(position_x, player_id, game_id, room_id, user_id) {
+    const postBody = {
+      Position_X: position_x,
+      Player_id: player_id,
+      Game_id: game_id,
+      Room_id: room_id,
+      User_id: user_id
+    };
+    return this.networkService.httpPost(this.api_url + 'piece', postBody);
+  }
+
+  /**
+   * Returns an Observable based on '/pieces/all?Game_id={game_id}' GET request
+   * @param game_id
+   * @returns {Observable}
+   */
+  getPieces(game_id: number) {
+    // Constructing the URL
+    const url = this.api_url + 'piece/all?Game_id=' + game_id;
+    // Returning the api call observable
+    return this.networkService.httpGet(url);
+  }
 }
