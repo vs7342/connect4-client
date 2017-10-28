@@ -58,6 +58,7 @@ export class DataService {
       return user;
     } else {
       // I guess just log out.. navigate to home page
+      return null;
     }
   }
 

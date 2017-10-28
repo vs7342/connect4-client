@@ -23,6 +23,7 @@ import {DataService} from './services/data.service';
 import { OutgoingChallengeComponent } from './modals/outgoing-challenge/outgoing-challenge.component';
 import { IncomingChallengeComponent } from './modals/incoming-challenge/incoming-challenge.component';
 import {PieceComponent} from "./game-board/piece.component";
+import { MyHeaderComponent } from './my-header/my-header.component';
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -48,7 +49,8 @@ const appRoutes: Routes = [
     GameComponent,
     OutgoingChallengeComponent,
     IncomingChallengeComponent,
-    PieceComponent
+    PieceComponent,
+    MyHeaderComponent
   ],
   imports: [
     BrowserModule,

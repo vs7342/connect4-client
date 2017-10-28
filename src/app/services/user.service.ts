@@ -59,4 +59,16 @@ export class UserService {
     };
     return this.networkService.httpPut(url, putBody);
   }
+
+  logout(user_id) {
+    // Call the enter/room endpoint since there is no session based stuff on server apart from changing user's room to a lobby
+    const url = this.api_url + 'enter/room';
+    const putBody = {
+      User_id: user_id,
+      Room_id: 1
+    };
+
+    // Now call the api to update the room id in DB
+    return this.networkService.httpPut(url, putBody);
+  }
 }
