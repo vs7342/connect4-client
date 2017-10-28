@@ -1,4 +1,17 @@
 <div class="game-board">
+
+  <div class="game-messages">
+    <div class="playing-against">
+      <p>You are playing against: {{myOpponent}}</p>
+    </div>
+    <div class="your-color">
+      <p>Your Color:</p>
+      <svg height="50" width="50">
+        <circle cx="25" cy="25" r="19" stroke="black" stroke-width="3" [attr.fill]="myColor" />
+      </svg>
+    </div>
+  </div>
+
   <div class="pieces">
 
     <!--Actual piece array-->
@@ -20,7 +33,17 @@
     <div class="pieces-column" (click)="playTurn(6)"></div>
 
   </div>
-  <div class="game-messages">
 
+  <!--Display the turn info appropriately along with seconds remaining if applicable-->
+  <div class="turn-info">
+    <div *ngIf="isMyTurn; then myTurn else notMyTurn"></div>
+    <ng-template #myTurn>
+      <div *ngIf="secondsRemaining <= 0; then zeroLeft else moreLeft"></div>
+      <ng-template #zeroLeft>You should play your turn ASAP!</ng-template>
+      <ng-template #moreLeft>Its your turn! You have {{secondsRemaining}} seconds remaining</ng-template>
+    </ng-template>
+    <ng-template #notMyTurn>
+      {{myOpponent}}'s turn
+    </ng-template>
   </div>
 </div>

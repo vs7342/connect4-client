@@ -127,4 +127,17 @@ export class GameService {
     // Returning the api call observable
     return this.networkService.httpGet(url);
   }
+
+  /**
+   * Returns an Observable based on '/game/state?Game_id={game_id}&User_id={user_id}' GET request
+   * @param game_id
+   * @param user_id
+   * @returns {Observable}
+   */
+  getMyGameState(game_id: number, user_id: number) {
+    // Constructing the URL
+    const url = this.api_url + 'game/state?Game_id=' + game_id + '&User_id=' + user_id;
+    // Returning the api call observable
+    return this.networkService.httpGet(url);
+  }
 }

@@ -4,7 +4,7 @@
   position: relative;
   border: 1px solid rgba(161, 161, 161, 0.7);
   margin: 0 auto;
-  margin-top: 100px;
+  margin-top: 40px;
 }
 
 .pieces-column{
@@ -16,4 +16,27 @@
 
 .pieces-column:hover{
   background-color: aliceblue;
+}
+
+.game-messages{
+  width: 352px;
+  position: relative;
+  margin: 0 auto;
+  margin-top: 40px;
+}
+
+.turn-info{
+  width: 352px;
+  position: relative;
+  margin: 0 auto;
+  margin-top: 40px;
+  font-size: large;
+}
+
+.your-color{
+  display: flex;
+}
+
+.your-color p{
+  margin-top: 15px;
 }

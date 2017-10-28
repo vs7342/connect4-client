@@ -1,5 +1,6 @@
 <div class="row custom-row title">
-  <p>Players Online</p>
+  <p *ngIf="currentUser.Room_id == 1;">Players Online</p>
+  <p *ngIf="currentUser.Room_id != 1;">Players Available for Challenge</p>
 </div>
 
 <!--Online Player List-->
