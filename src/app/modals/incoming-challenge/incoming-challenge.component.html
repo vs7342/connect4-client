@@ -4,8 +4,11 @@
     You have been challenged by {{challenger.Screen_Name}}
   </h3>
   <div class="modal-body">
-    <div class="row">
+    <div class="row" *ngIf="seconds_remaining > 0">
       You have {{seconds_remaining}} seconds to respond..
+    </div>
+    <div class="row" *ngIf="seconds_remaining <= 0">
+      Time is up..!!
     </div>
   </div>
   <div class="modal-footer">

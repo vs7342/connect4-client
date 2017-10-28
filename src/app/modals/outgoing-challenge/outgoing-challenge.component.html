@@ -4,7 +4,7 @@
     {{challengee.Screen_Name}} has been challenged!
   </h3>
   <div class="modal-body">
-    <div class="row">
+    <div class="row" *ngIf="seconds_remaining >= 0">
       Kindly wait while {{challengee.Screen_Name}} accepts the challenge..
       <br><br>
       {{seconds_remaining}} sec(s) left..

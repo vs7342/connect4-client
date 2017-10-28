@@ -23,12 +23,14 @@ export class OnlinePlayersComponent implements OnInit {
   challengee: {id: number, Screen_Name: string};
   outgoingSecondsRemaining: number;
   outgoingChallengeId: number;
+  outgoingCounter: any;
 
   // Incoming modal stuff
   isIncomingChlgDisplayed = false;
   challenger: {id: number, Screen_Name: string};
   incomingSecondsRemaining: number;
   incomingChallengeId: number;
+  incomingCounter: any;
 
   constructor(
     private dataService: DataService,
@@ -122,9 +124,8 @@ export class OnlinePlayersComponent implements OnInit {
             this.outgoingChallengeId = data.data.id;
             this.isOutgoingChlgDisplayed = true;
 
-            // TODO: Need to figure out a way to display countdown
-            // const challengeId = data.data.id;
-            // const challengeCreateDate = data.data.Created_At;
+            // Start outgoing counter
+            this.startOutgoingCountdown();
 
             // Start the heartbeat to check the challenge status
             this.checkOutgoingChallengeHeartbeat(this.outgoingChallengeId);
@@ -165,6 +166,9 @@ export class OnlinePlayersComponent implements OnInit {
           this.incomingSecondsRemaining = 30;
           this.isIncomingChlgDisplayed = true;
 
+          // Start incoming counter
+          this.startIncomingCountdown();
+
           // Keep checking this challenge for cancellation / expiration
           this.checkIncomingChallengeStatusHeartBeat(this.incomingChallengeId);
         } else {
@@ -189,6 +193,9 @@ export class OnlinePlayersComponent implements OnInit {
           // Challenge exists.. now you can check various conditions
           // 1. Accept
           if (challenge['Accepted'] === true) {
+            // Stop outgoing counter
+            this.stopOutgoingCountdown();
+            // Hide modal
             this.isOutgoingChlgDisplayed = false;
             // First save the challenge_id and opponent_user_id for messaging purpose
             this.dataService.setCurrentChallenge(this.outgoingChallengeId);
@@ -205,6 +212,9 @@ export class OnlinePlayersComponent implements OnInit {
           }
           // 2. Decline
           if (challenge['Accepted'] === false) {
+            // Stop outgoing counter
+            this.stopOutgoingCountdown();
+            // Hide modal
             this.isOutgoingChlgDisplayed = false;
             this.toaster.info('Opponent has declined the challenge');
             // Unset outgoing challengeId
@@ -213,6 +223,9 @@ export class OnlinePlayersComponent implements OnInit {
           }
           // 3. Cancelled
           if (challenge['Cancelled'] === true) {
+            // Stop outgoing counter
+            this.stopOutgoingCountdown();
+            // Hide modal
             this.isOutgoingChlgDisplayed = false;
             // Unset outgoing challengeId
             this.outgoingChallengeId = 0;
@@ -222,6 +235,9 @@ export class OnlinePlayersComponent implements OnInit {
           }
           // 4. Expired
           if (challenge['Expired'] === true) {
+            // Stop outgoing counter
+            this.stopOutgoingCountdown();
+            // Hide Modal
             this.isOutgoingChlgDisplayed = false;
             // TODO: When the counter thing is handled client side, toaster info display is not needed
             this.toaster.info('Challenge Expired');
@@ -265,10 +281,15 @@ export class OnlinePlayersComponent implements OnInit {
           if (challenge['Accepted'] === true || challenge['Accepted'] === false) {
             // Stop the heartbeat.. we don't need it anymore
             this.isIncomingChlgDisplayed = false;
+            // Stop incoming counter
+            this.stopIncomingCountdown();
             return;
           }
           // 3. Cancelled
           if (challenge['Cancelled'] === true && this.isIncomingChlgDisplayed) {
+            // Stop incoming counter
+            this.stopIncomingCountdown();
+            // Hide the modal
             this.isIncomingChlgDisplayed = false;
             this.toaster.info('Challenge has been cancelled.');
             // Again start listening to any incoming challenges
@@ -277,6 +298,9 @@ export class OnlinePlayersComponent implements OnInit {
           }
           // 4. Expired
           if (challenge['Expired'] === true && this.isIncomingChlgDisplayed) {
+            // Stop incoming counter
+            this.stopIncomingCountdown();
+            // Hide the modal
             this.isIncomingChlgDisplayed = false;
             // TODO: When the counter thing is handled client side, toaster info display is not needed
             this.toaster.info('Challenge has been expired');
@@ -305,6 +329,9 @@ export class OnlinePlayersComponent implements OnInit {
   // Event emitted by outgoing challenge modal
   cancelChallenge() {
     console.log('Outgoing chlng canceled');
+    // Stop outgoing counter
+    this.stopOutgoingCountdown();
+    // Hide the modal
     // close the modal and display a message
     this.isOutgoingChlgDisplayed = false;
     this.toaster.info('Challenge canceled');
@@ -315,6 +342,8 @@ export class OnlinePlayersComponent implements OnInit {
   onIncomingChallengeResponse(isAccepted: number) {
     if (isAccepted === 1) {
       console.log('Incoming chlng accepted');
+      // Stop incoming counter
+      this.stopIncomingCountdown();
       // Close the modal
       this.isIncomingChlgDisplayed = false;
       // First save the challenge_id and opponent_user_id for messaging purpose
@@ -326,6 +355,8 @@ export class OnlinePlayersComponent implements OnInit {
       setTimeout(() => { this.initializeGame(this.incomingChallengeId) ; }, 2000);
     } else {
       console.log('Incoming chlng declined');
+      // Stop incoming counter
+      this.stopIncomingCountdown();
       // Display a message saying that your challenge has been declined..
       this.isIncomingChlgDisplayed = false;
       // Close the modal
@@ -356,5 +387,27 @@ export class OnlinePlayersComponent implements OnInit {
         this.toaster.error(error, 'Error occurred while initiating the game..');
       })
     );
+  }
+
+  startOutgoingCountdown() {
+    this.outgoingSecondsRemaining = 30;
+    this.outgoingCounter = setInterval(() => {
+      this.outgoingSecondsRemaining = this.outgoingSecondsRemaining - 1;
+    }, 1000);
+  }
+
+  startIncomingCountdown() {
+    this.incomingSecondsRemaining = 30;
+    this.incomingCounter = setInterval(() => {
+      this.incomingSecondsRemaining = this.incomingSecondsRemaining - 1;
+    }, 1000);
+  }
+
+  stopOutgoingCountdown() {
+    clearInterval(this.outgoingCounter);
+  }
+
+  stopIncomingCountdown() {
+    clearInterval(this.incomingCounter);
   }
 }
